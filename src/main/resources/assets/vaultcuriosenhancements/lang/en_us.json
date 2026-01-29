@@ -2,6 +2,7 @@
   "curios.identifier.shard_pouch": "Shard Pouch",
   "curios.identifier.coin_pouch": "Coin Pouch",
   "curios.identifier.antique_collector_book": "Antique Stamp Collector Book",
+  "curios.identifier.vault_map": "Vault Map",
   "vault_curios_enhancements.opencompass": "Open Compass Target Selection",
   "key.categories.vault_curios_enhancements": "Vault Curios Enhancements"
 }

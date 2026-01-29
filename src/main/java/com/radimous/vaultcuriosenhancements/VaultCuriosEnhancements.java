@@ -41,6 +41,10 @@ public class VaultCuriosEnhancements {
             () -> new SlotTypeMessage.Builder("antique_collector_book")
                 .icon(ResourceLocation.parse(CuriosApi.MODID + ":slot/antique_collector_book"))
                 .priority(800).build());
+	    InterModComms.sendTo(CuriosApi.MODID, SlotTypeMessage.REGISTER_TYPE,
+             () -> new SlotTypeMessage.Builder("vault_map")
+                     .icon(ResourceLocation.parse(CuriosApi.MODID + ":slot/vault_map"))
+                     .priority(800).build());
     }
 
     public static String fmtNum(int num) {
