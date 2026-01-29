@@ -8,6 +8,7 @@ More details in each section.
 - Void Stone
 - Coin Pouch
 - Antique Book
+- Vault Map
 
 ### Improvements to existing curios
 - Makes all curios shift-clickable
