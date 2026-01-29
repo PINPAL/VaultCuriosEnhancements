@@ -1,6 +1,5 @@
 package com.radimous.vaultcuriosenhancements.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -13,6 +12,7 @@ import iskallia.vault.init.ModItems;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -72,22 +72,14 @@ public class MixinInputEvents {
     }
 
 	@WrapOperation(
-	  method = "onInput",
-	  at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/player/Inventory;hasAnyOf(Ljava/util/Set;)Z",
-		ordinal = 0
-	  ),
-	  slice = @Slice(
-		from = @At(
-		  value = "FIELD",
-		  target = "Liskallia/vault/init/ModKeybinds;openVaultMap:Lnet/minecraft/client/KeyMapping;",
-		  opcode = Opcodes.GETSTATIC
-		)
+	  method = "onInput", at = @At(
+	  value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;hasAnyOf(Ljava/util/Set;)Z", remap = true, ordinal = 0
+	), slice = @Slice(
+	  from = @At(
+		value = "FIELD", target = "Liskallia/vault/init/ModKeybinds;openVaultMap:Lnet/minecraft/client/KeyMapping;", opcode = Opcodes.GETSTATIC
 	  )
 	)
-	private static boolean vaultMapChecksCuriosToo(Inventory instance, java.util.Set<net.minecraft.world.item.Item> itemsSet, Operation<Boolean> original
-	) {
+	) private static boolean vaultMapChecksCuriosToo(Inventory instance, Set<Item> itemsSet, Operation<Boolean> original) {
 		// Original vanilla inventory check
 		if (original.call(instance, itemsSet)) {
 			return true;
@@ -96,31 +88,18 @@ public class MixinInputEvents {
 		// Curios check
 		var player = Minecraft.getInstance().player;
 		if (player == null) return false;
-		return CuriosApi.getCuriosHelper()
-		                .findFirstCurio(player, stack -> itemsSet.contains(stack.getItem()))
-		                .isPresent();
+		return CuriosApi.getCuriosHelper().findFirstCurio(player, stack -> itemsSet.contains(stack.getItem())).isPresent();
 	}
 
 	@WrapOperation(
-	  method = "onInput",
-	  at = @At(
-		value = "INVOKE",
-		target = "Lnet/minecraft/world/entity/player/Inventory;hasAnyOf(Ljava/util/Set;)Z",
-		ordinal = 0
-	  ),
-	  slice = @Slice(
-		from = @At(
-		  value = "FIELD",
-		  target = "Liskallia/vault/init/ModKeybinds;holdVaultMap:Lnet/minecraft/client/KeyMapping;",
-		  opcode = Opcodes.GETSTATIC
-		)
+	  method = "onInput", at = @At(
+	  value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Inventory;hasAnyOf(Ljava/util/Set;)Z", remap = true, ordinal = 0
+	), slice = @Slice(
+	  from = @At(
+		value = "FIELD", target = "Liskallia/vault/init/ModKeybinds;holdVaultMap:Lnet/minecraft/client/KeyMapping;", opcode = Opcodes.GETSTATIC
 	  )
 	)
-	private static boolean vaultMapHoldChecksCuriosToo(
-	  Inventory instance,
-	  java.util.Set<net.minecraft.world.item.Item> itemsSet,
-	  Operation<Boolean> original
-	) {
+	) private static boolean vaultMapHoldChecksCuriosToo(Inventory instance, Set<Item> itemsSet, Operation<Boolean> original) {
 		// Original vanilla inventory check
 		if (original.call(instance, itemsSet)) {
 			return true;
@@ -129,9 +108,7 @@ public class MixinInputEvents {
 		// Curios check
 		var player = Minecraft.getInstance().player;
 		if (player == null) return false;
-		return CuriosApi.getCuriosHelper()
-		                .findFirstCurio(player, stack -> itemsSet.contains(stack.getItem()))
-		                .isPresent();
+		return CuriosApi.getCuriosHelper().findFirstCurio(player, stack -> itemsSet.contains(stack.getItem())).isPresent();
 	}
 
 }
